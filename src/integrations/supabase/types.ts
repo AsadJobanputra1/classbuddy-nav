@@ -82,6 +82,8 @@ export type Database = {
           icon: string | null
           id: string
           is_featured: boolean | null
+          last_modified: string | null
+          last_modified_by: string | null
           name: string
           prompt_questions: string[] | null
           updated_at: string
@@ -97,6 +99,8 @@ export type Database = {
           icon?: string | null
           id?: string
           is_featured?: boolean | null
+          last_modified?: string | null
+          last_modified_by?: string | null
           name: string
           prompt_questions?: string[] | null
           updated_at?: string
@@ -112,6 +116,8 @@ export type Database = {
           icon?: string | null
           id?: string
           is_featured?: boolean | null
+          last_modified?: string | null
+          last_modified_by?: string | null
           name?: string
           prompt_questions?: string[] | null
           updated_at?: string
@@ -127,6 +133,33 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          last_use: string | null
+          role: string | null
+        }
+        Insert: {
+          email?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          last_use?: string | null
+          role?: string | null
+        }
+        Update: {
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          last_use?: string | null
+          role?: string | null
+        }
+        Relationships: []
+      }
       virtual_tas: {
         Row: {
           ai_guardrails: string | null
@@ -140,6 +173,8 @@ export type Database = {
           id: string
           instructor_email: string | null
           instructor_name: string | null
+          last_modified: string | null
+          last_modified_by: string | null
           name: string
           no_answer_response: string | null
           panopto_api_key: string | null
@@ -163,6 +198,8 @@ export type Database = {
           id?: string
           instructor_email?: string | null
           instructor_name?: string | null
+          last_modified?: string | null
+          last_modified_by?: string | null
           name: string
           no_answer_response?: string | null
           panopto_api_key?: string | null
@@ -186,6 +223,8 @@ export type Database = {
           id?: string
           instructor_email?: string | null
           instructor_name?: string | null
+          last_modified?: string | null
+          last_modified_by?: string | null
           name?: string
           no_answer_response?: string | null
           panopto_api_key?: string | null

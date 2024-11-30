@@ -8,6 +8,7 @@ import WelcomeStep from "./wizard-steps/WelcomeStep";
 import PromptStep from "./wizard-steps/PromptStep";
 import DatasourceStep from "./wizard-steps/DatasourceStep";
 import TopNav from "./TopNav";
+import Sidebar from "./Sidebar";
 
 const AddTAWizard = () => {
   const [step, setStep] = useState(1);
@@ -90,12 +91,20 @@ const AddTAWizard = () => {
 
   const handleSubmit = async () => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const submissionData = {
+        ...formData,
+        last_modified_by: user?.id,
+        last_modified: new Date().toISOString()
+      };
+
       const { error } = editId
         ? await supabase
             .from("virtual_tas")
-            .update(formData)
+            .update(submissionData)
             .eq("id", editId)
-        : await supabase.from("virtual_tas").insert([formData]);
+        : await supabase.from("virtual_tas").insert([submissionData]);
       
       if (error) throw error;
       
@@ -153,60 +162,63 @@ const AddTAWizard = () => {
 
   return (
     <div>
+      <Sidebar />
       <TopNav />
-      <div className="max-w-2xl mx-auto p-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">
-            {editId ? 'Edit' : 'Add New'} Virtual TA
-          </h2>
-          <div className="flex gap-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className={`w-1/4 h-2 rounded ${
-                  i <= step ? "bg-primary" : "bg-gray-200"
-                }`}
-              />
-            ))}
+      <div className="ml-64 pt-16 p-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-2">
+              {editId ? 'Edit' : 'Add New'} Virtual TA
+            </h2>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className={`w-1/4 h-2 rounded ${
+                    i <= step ? "bg-primary" : "bg-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (step === 4) handleSubmit();
-            else setStep(step + 1);
-          }}
-          className="space-y-6"
-        >
-          {renderStep()}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (step === 4) handleSubmit();
+              else setStep(step + 1);
+            }}
+            className="space-y-6"
+          >
+            {renderStep()}
 
-          <div className="flex justify-between pt-4">
-            <div>
-              {step > 1 && (
+            <div className="flex justify-between pt-4">
+              <div>
+                {step > 1 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(step - 1)}
+                  >
+                    Back
+                  </Button>
+                )}
+              </div>
+              <div className="space-x-2">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setStep(step - 1)}
+                  onClick={() => navigate("/")}
                 >
-                  Back
+                  Cancel
                 </Button>
-              )}
+                <Button type="submit">
+                  {step === 4 ? (editId ? 'Update' : 'Submit') : 'Next'}
+                </Button>
+              </div>
             </div>
-            <div className="space-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/")}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">
-                {step === 4 ? (editId ? 'Update' : 'Submit') : 'Next'}
-              </Button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
