@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
-import { LayoutDashboard, Users, Bot, MessageSquare, Settings } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { LayoutDashboard, Users, Bot, MessageSquare, Settings, Database } from "lucide-react";
 
 const Sidebar = () => {
+  const location = useLocation();
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
     { icon: Bot, label: "Virtual TAs", path: "/" },
+    { icon: Database, label: "GPTs", path: "/gpts" },
     { icon: MessageSquare, label: "Chat", path: "/chat" },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];
@@ -25,7 +27,9 @@ const Sidebar = () => {
           <Link
             key={item.label}
             to={item.path}
-            className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            className={`flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
+              location.pathname === item.path ? "bg-primary text-primary-foreground" : ""
+            }`}
           >
             <item.icon className="w-5 h-5" />
             <span>{item.label}</span>

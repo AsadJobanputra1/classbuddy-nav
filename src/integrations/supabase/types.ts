@@ -9,6 +9,124 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      gpt_categories: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gpt_files: {
+        Row: {
+          created_at: string
+          file_path: string
+          file_size: number | null
+          file_type: string | null
+          filename: string
+          gpt_id: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          file_path: string
+          file_size?: number | null
+          file_type?: string | null
+          filename: string
+          gpt_id?: string | null
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          file_path?: string
+          file_size?: number | null
+          file_type?: string | null
+          filename?: string
+          gpt_id?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gpt_files_gpt_id_fkey"
+            columns: ["gpt_id"]
+            isOneToOne: false
+            referencedRelation: "gpts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gpts: {
+        Row: {
+          ai_guardrails: string | null
+          billing_code: string | null
+          category_id: string | null
+          created_at: string
+          default_prompt: string | null
+          description: string
+          icon: string | null
+          id: string
+          is_featured: boolean | null
+          name: string
+          prompt_questions: string[] | null
+          updated_at: string
+          welcome_message: string | null
+        }
+        Insert: {
+          ai_guardrails?: string | null
+          billing_code?: string | null
+          category_id?: string | null
+          created_at?: string
+          default_prompt?: string | null
+          description: string
+          icon?: string | null
+          id?: string
+          is_featured?: boolean | null
+          name: string
+          prompt_questions?: string[] | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Update: {
+          ai_guardrails?: string | null
+          billing_code?: string | null
+          category_id?: string | null
+          created_at?: string
+          default_prompt?: string | null
+          description?: string
+          icon?: string | null
+          id?: string
+          is_featured?: boolean | null
+          name?: string
+          prompt_questions?: string[] | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gpts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "gpt_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       virtual_tas: {
         Row: {
           ai_guardrails: string | null
