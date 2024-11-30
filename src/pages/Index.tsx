@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
 import Sidebar from "../components/Sidebar";
 import TopNav from "../components/TopNav";
 import TACard from "../components/TACard";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+import { supabase } from "@/lib/supabase";
 
 const Index = () => {
   const [tas, setTAs] = useState([]);
