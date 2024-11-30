@@ -9,7 +9,78 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      virtual_tas: {
+        Row: {
+          ai_guardrails: string | null
+          canvas_api_key: string | null
+          canvas_course_url: string | null
+          canvas_enabled: boolean | null
+          captioning_enabled: boolean | null
+          course: string
+          created_at: string
+          default_prompt: string | null
+          id: string
+          instructor_email: string | null
+          instructor_name: string | null
+          name: string
+          no_answer_response: string | null
+          panopto_api_key: string | null
+          panopto_course_url: string | null
+          panopto_enabled: boolean | null
+          prompt_questions: string[] | null
+          ta_email: string | null
+          teaching_style: string | null
+          updated_at: string
+          welcome_message: string | null
+        }
+        Insert: {
+          ai_guardrails?: string | null
+          canvas_api_key?: string | null
+          canvas_course_url?: string | null
+          canvas_enabled?: boolean | null
+          captioning_enabled?: boolean | null
+          course: string
+          created_at?: string
+          default_prompt?: string | null
+          id?: string
+          instructor_email?: string | null
+          instructor_name?: string | null
+          name: string
+          no_answer_response?: string | null
+          panopto_api_key?: string | null
+          panopto_course_url?: string | null
+          panopto_enabled?: boolean | null
+          prompt_questions?: string[] | null
+          ta_email?: string | null
+          teaching_style?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Update: {
+          ai_guardrails?: string | null
+          canvas_api_key?: string | null
+          canvas_course_url?: string | null
+          canvas_enabled?: boolean | null
+          captioning_enabled?: boolean | null
+          course?: string
+          created_at?: string
+          default_prompt?: string | null
+          id?: string
+          instructor_email?: string | null
+          instructor_name?: string | null
+          name?: string
+          no_answer_response?: string | null
+          panopto_api_key?: string | null
+          panopto_course_url?: string | null
+          panopto_enabled?: boolean | null
+          prompt_questions?: string[] | null
+          ta_email?: string | null
+          teaching_style?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
