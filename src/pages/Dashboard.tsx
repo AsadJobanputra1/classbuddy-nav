@@ -60,11 +60,11 @@ const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex min-h-screen w-full">
         <Sidebar />
         <div className="flex-1">
           <TopNav />
-          <div className="p-6 mt-16 space-y-6">
+          <div className="p-6 mt-16 ml-64 space-y-6">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold">Dashboard</h1>
               <Select value={dateRange} onValueChange={setDateRange}>

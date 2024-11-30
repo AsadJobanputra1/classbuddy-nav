@@ -78,11 +78,11 @@ const Settings = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex min-h-screen w-full">
         <Sidebar />
         <div className="flex-1">
           <TopNav />
-          <div className="p-6 mt-16 space-y-6">
+          <div className="p-6 mt-16 ml-64 space-y-6">
             <h1 className="text-2xl font-bold">Settings</h1>
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">AI Models</h2>
