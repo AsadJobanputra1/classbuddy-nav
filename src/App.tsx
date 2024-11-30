@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import GPTs from "./pages/GPTs";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import Chat from "./pages/Chat";
 import AddTAWizard from "./components/AddTAWizard";
 import AddGPTWizard from "./components/AddGPTWizard";
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/add-ta" element={<AddTAWizard />} />
           <Route path="/gpts" element={<GPTs />} />
           <Route path="/create-gpt" element={<AddGPTWizard />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
