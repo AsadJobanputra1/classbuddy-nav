@@ -1,4 +1,4 @@
-import { Edit, Trash2, Bot } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,8 +11,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface GPTCardProps {
   id: string;
@@ -20,7 +21,6 @@ interface GPTCardProps {
   description: string;
   icon?: string | null;
   onDelete?: () => void;
-  onEdit?: () => void;
 }
 
 const GPTCard = ({ 
@@ -28,11 +28,11 @@ const GPTCard = ({
   name, 
   description,
   icon,
-  onDelete,
-  onEdit 
+  onDelete 
 }: GPTCardProps) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     const { error } = await supabase
@@ -57,6 +57,10 @@ const GPTCard = ({
     if (onDelete) {
       onDelete();
     }
+  };
+
+  const handleEdit = () => {
+    navigate(`/create-gpt?edit=${id}`);
   };
 
   const handleImageError = () => {
@@ -89,7 +93,7 @@ const GPTCard = ({
         <div className="flex gap-2">
           <button 
             className="p-2 hover:bg-gray-100 rounded-full"
-            onClick={onEdit}
+            onClick={handleEdit}
           >
             <Edit className="w-4 h-4 text-gray-600" />
           </button>
