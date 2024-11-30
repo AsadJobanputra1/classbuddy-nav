@@ -12,7 +12,13 @@ const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-white border-r border-gray-200 fixed left-0 top-0 p-4">
       <div className="flex items-center gap-2 mb-8 px-2">
-        <h1 className="text-2xl font-bold text-primary">ClassBuddy</h1>
+        <Link to="/">
+          <img 
+            src="/lovable-uploads/2ddd02c0-2f21-4773-8f86-9014d539018b.png" 
+            alt="ClassBuddy" 
+            className="h-8"
+          />
+        </Link>
       </div>
       <nav className="space-y-2">
         {menuItems.map((item) => (
