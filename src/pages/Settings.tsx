@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import TopNav from "@/components/TopNav";
+import Sidebar from "@/components/Sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const models = [
   {
@@ -74,29 +77,36 @@ const Settings = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Settings</h1>
-      
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">AI Models</h2>
-        {models.map(model => (
-          <Card key={model.id} className="p-4">
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-medium">{model.name}</h3>
-                </div>
-                <p className="text-sm text-gray-500">{model.description}</p>
-              </div>
-              <Switch
-                checked={enabledModels[model.id] || false}
-                onCheckedChange={() => handleModelToggle(model.id)}
-              />
+    <SidebarProvider>
+      <div className="flex h-screen bg-gray-100">
+        <Sidebar />
+        <div className="flex-1">
+          <TopNav />
+          <div className="p-6 mt-16 space-y-6">
+            <h1 className="text-2xl font-bold">Settings</h1>
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">AI Models</h2>
+              {models.map(model => (
+                <Card key={model.id} className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium">{model.name}</h3>
+                      </div>
+                      <p className="text-sm text-gray-500">{model.description}</p>
+                    </div>
+                    <Switch
+                      checked={enabledModels[model.id] || false}
+                      onCheckedChange={() => handleModelToggle(model.id)}
+                    />
+                  </div>
+                </Card>
+              ))}
             </div>
-          </Card>
-        ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

@@ -4,6 +4,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import TopNav from "@/components/TopNav";
+import Sidebar from "@/components/Sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("this-week");
@@ -56,66 +59,74 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Select value={dateRange} onValueChange={setDateRange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select date range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="this-week">This Week</SelectItem>
-            <SelectItem value="last-week">Last Week</SelectItem>
-            <SelectItem value="last-month">Last Month</SelectItem>
-          </SelectContent>
-        </Select>
+    <SidebarProvider>
+      <div className="flex h-screen bg-gray-100">
+        <Sidebar />
+        <div className="flex-1">
+          <TopNav />
+          <div className="p-6 mt-16 space-y-6">
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold">Dashboard</h1>
+              <Select value={dateRange} onValueChange={setDateRange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select date range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="this-week">This Week</SelectItem>
+                  <SelectItem value="last-week">Last Week</SelectItem>
+                  <SelectItem value="last-month">Last Month</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Card className="p-6">
+              <h2 className="text-lg font-semibold mb-4">Global Chat Usage</h2>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={generateDailyData()}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h2 className="text-lg font-semibold mb-4">Virtual TA Usage</h2>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={generateTAData()}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h2 className="text-lg font-semibold mb-4">GPTs Usage</h2>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={generateGPTData()}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#ffc658" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
-
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Global Chat Usage</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={generateDailyData()}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Virtual TA Usage</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={generateTAData()}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">GPTs Usage</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={generateGPTData()}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#ffc658" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-    </div>
+    </SidebarProvider>
   );
 };
 
