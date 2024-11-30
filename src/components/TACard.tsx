@@ -17,12 +17,25 @@ interface TACardProps {
   id: string;
   name: string;
   course: string;
-  email: string;
-  schedule: string;
+  instructor_name?: string;
+  instructor_email?: string;
+  ta_email?: string;
+  teaching_style?: string;
   onDelete?: () => void;
+  onEdit?: () => void;
 }
 
-const TACard = ({ id, name, course, email, schedule, onDelete }: TACardProps) => {
+const TACard = ({ 
+  id, 
+  name, 
+  course, 
+  instructor_name,
+  instructor_email,
+  ta_email,
+  teaching_style,
+  onDelete,
+  onEdit 
+}: TACardProps) => {
   const { toast } = useToast();
 
   const handleDelete = async () => {
@@ -58,7 +71,10 @@ const TACard = ({ id, name, course, email, schedule, onDelete }: TACardProps) =>
           <p className="text-sm text-gray-600">{course}</p>
         </div>
         <div className="flex gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full">
+          <button 
+            className="p-2 hover:bg-gray-100 rounded-full"
+            onClick={onEdit}
+          >
             <Edit className="w-4 h-4 text-gray-600" />
           </button>
           <AlertDialog>
@@ -84,10 +100,13 @@ const TACard = ({ id, name, course, email, schedule, onDelete }: TACardProps) =>
       </div>
       <div className="space-y-2">
         <p className="text-sm text-gray-600">
-          <span className="font-medium">Email:</span> {email}
+          <span className="font-medium">Instructor:</span> {instructor_name || 'N/A'}
         </p>
         <p className="text-sm text-gray-600">
-          <span className="font-medium">Schedule:</span> {schedule}
+          <span className="font-medium">Email:</span> {ta_email || 'N/A'}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Teaching Style:</span> {teaching_style || 'N/A'}
         </p>
       </div>
     </div>

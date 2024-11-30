@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/lib/supabase";
@@ -12,7 +12,9 @@ import TopNav from "./TopNav";
 const AddTAWizard = () => {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const editId = new URLSearchParams(location.search).get('edit');
   
   const [formData, setFormData] = useState({
     course: "",
@@ -35,6 +37,37 @@ const AddTAWizard = () => {
     captioning_enabled: false,
   });
 
+  useEffect(() => {
+    if (editId) {
+      fetchTAData();
+    }
+  }, [editId]);
+
+  const fetchTAData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("virtual_tas")
+        .select("*")
+        .eq("id", editId)
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setFormData({
+          ...data,
+          prompt_questions: data.prompt_questions || [""],
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch TA data",
+        variant: "destructive",
+      });
+      navigate("/");
+    }
+  };
+
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -42,7 +75,10 @@ const AddTAWizard = () => {
   const handlePromptQuestionChange = (index: number, value: string) => {
     const newQuestions = [...formData.prompt_questions];
     newQuestions[index] = value;
-    setFormData((prev) => ({ ...prev, prompt_questions: newQuestions }));
+    setFormData((prev) => ({
+      ...prev,
+      prompt_questions: newQuestions,
+    }));
   };
 
   const addPromptQuestion = () => {
@@ -54,20 +90,25 @@ const AddTAWizard = () => {
 
   const handleSubmit = async () => {
     try {
-      const { error } = await supabase.from("virtual_tas").insert([formData]);
+      const { error } = editId
+        ? await supabase
+            .from("virtual_tas")
+            .update(formData)
+            .eq("id", editId)
+        : await supabase.from("virtual_tas").insert([formData]);
       
       if (error) throw error;
       
       toast({
         title: "Success",
-        description: "Virtual TA has been created successfully",
+        description: `Virtual TA has been ${editId ? 'updated' : 'created'} successfully`,
       });
       
       navigate("/");
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create Virtual TA",
+        description: `Failed to ${editId ? 'update' : 'create'} Virtual TA`,
         variant: "destructive",
       });
     }
@@ -115,7 +156,9 @@ const AddTAWizard = () => {
       <TopNav />
       <div className="max-w-2xl mx-auto p-6">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Add New Virtual TA</h2>
+          <h2 className="text-2xl font-bold mb-2">
+            {editId ? 'Edit' : 'Add New'} Virtual TA
+          </h2>
           <div className="flex gap-2">
             {[1, 2, 3, 4].map((i) => (
               <div
@@ -159,7 +202,7 @@ const AddTAWizard = () => {
                 Cancel
               </Button>
               <Button type="submit">
-                {step === 4 ? "Submit" : "Next"}
+                {step === 4 ? (editId ? 'Update' : 'Submit') : 'Next'}
               </Button>
             </div>
           </div>
