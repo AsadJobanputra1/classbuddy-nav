@@ -3,10 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/lib/supabase";
-import GPTBasicInfoStep from "./wizard-steps/GPTBasicInfoStep";
-import GPTWelcomeStep from "./wizard-steps/GPTWelcomeStep";
-import GPTPromptStep from "./wizard-steps/GPTPromptStep";
-import GPTKnowledgebaseStep from "./wizard-steps/GPTKnowledgebaseStep";
+import GPTBasicInfoStep from "@/components/wizard-steps/GPTBasicInfoStep";
+import GPTWelcomeStep from "@/components/wizard-steps/GPTWelcomeStep";
+import GPTPromptStep from "@/components/wizard-steps/GPTPromptStep";
+import GPTKnowledgebaseStep from "@/components/wizard-steps/GPTKnowledgebaseStep";
 import Sidebar from "./Sidebar";
 import TopNav from "./TopNav";
 
