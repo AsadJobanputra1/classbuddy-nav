@@ -1,8 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Pin, Trash, Share2, Edit } from "lucide-react";
-import { useToast } from "./ui/use-toast";
-import { supabase } from "@/lib/supabase";
+import { Edit, Trash2, Bot } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,90 +10,111 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 interface GPTCardProps {
   id: string;
   name: string;
   description: string;
-  is_featured: boolean;
-  onDelete: (id: string) => void;
-  onToggleFeature: (id: string, featured: boolean) => void;
+  icon?: string | null;
+  onDelete?: () => void;
+  onEdit?: () => void;
 }
 
-const GPTCard = ({ id, name, description, is_featured, onDelete, onToggleFeature }: GPTCardProps) => {
+const GPTCard = ({ 
+  id, 
+  name, 
+  description,
+  icon,
+  onDelete,
+  onEdit 
+}: GPTCardProps) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/gpt/${id}`);
-      toast({
-        title: "Link copied",
-        description: "GPT link has been copied to clipboard",
-      });
-    } catch (error) {
+  const handleDelete = async () => {
+    const { error } = await supabase
+      .from("gpts")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
       toast({
         title: "Error",
-        description: "Failed to copy link",
+        description: "Failed to delete GPT",
         variant: "destructive",
       });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "GPT deleted successfully",
+    });
+
+    if (onDelete) {
+      onDelete();
     }
   };
 
-  const handleEdit = () => {
-    navigate(`/create-gpt?edit=${id}`);
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-start">
+    <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-3">
+          {icon && !imageError ? (
+            <img 
+              src={icon} 
+              alt={name} 
+              className="w-8 h-8 rounded-full"
+              onError={handleImageError}
+            />
+          ) : (
+            <img 
+              src="/lovable-uploads/16e66459-08b8-409e-8e30-045c5f91ca38.png"
+              alt={name}
+              className="w-8 h-8"
+            />
+          )}
           <div>
-            <CardTitle className="text-xl">{name}</CardTitle>
-            <CardDescription className="mt-2">{description}</CardDescription>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onToggleFeature(id, !is_featured)}
-              className={is_featured ? "text-yellow-500" : ""}
-            >
-              <Pin className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleShare}>
-              <Share2 className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleEdit}>
-              <Edit className="h-4 w-4" />
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Trash className="h-4 w-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action is non-reversible. This will permanently delete your GPT.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => onDelete(id)}>Delete</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+            <p className="text-sm text-gray-600">{description}</p>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        {/* Additional content can be added here */}
-      </CardContent>
-    </Card>
+        <div className="flex gap-2">
+          <button 
+            className="p-2 hover:bg-gray-100 rounded-full"
+            onClick={onEdit}
+          >
+            <Edit className="w-4 h-4 text-gray-600" />
+          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="p-2 hover:bg-gray-100 rounded-full">
+                <Trash2 className="w-4 h-4 text-red-500" />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete this GPT.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+    </div>
   );
 };
 

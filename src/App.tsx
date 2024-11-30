@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import GPTs from "./pages/GPTs";
+import Dashboard from "./pages/Dashboard";
+import Settings from "./pages/Settings";
 import AddTAWizard from "./components/AddTAWizard";
 import AddGPTWizard from "./components/AddGPTWizard";
 
@@ -18,6 +20,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/add-ta" element={<AddTAWizard />} />
           <Route path="/gpts" element={<GPTs />} />
           <Route path="/create-gpt" element={<AddGPTWizard />} />
