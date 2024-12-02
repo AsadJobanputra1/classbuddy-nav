@@ -4,6 +4,7 @@ import AddTAWizard from "./components/AddTAWizard";
 import AddGPTWizard from "./components/AddGPTWizard";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import GPTs from "./pages/GPTs";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -24,6 +25,7 @@ function App() {
           <Route path="/add-ta" element={<AddTAWizard />} />
           <Route path="/add-gpt" element={<AddGPTWizard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/gpts" element={<GPTs />} />
         </Routes>
       </Router>
     </QueryClientProvider>
