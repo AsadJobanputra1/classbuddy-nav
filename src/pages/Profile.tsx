@@ -104,14 +104,14 @@ const Profile = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Sidebar />
       <TopNav />
       <div className="ml-64 pt-16 p-6">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">Manage Profile</h2>
           
-          <div className="space-y-4">
+          <div className="space-y-4 bg-white p-6 rounded-lg shadow">
             <div>
               <Label>First Name</Label>
               <Input
@@ -164,17 +164,18 @@ const Profile = () => {
             <div>
               <Label>Last Use</Label>
               <Input
-                value={new Date(profile.last_use).toLocaleDateString()}
+                value={profile.last_use ? new Date(profile.last_use).toLocaleDateString() : ''}
                 readOnly
+                className="bg-gray-50"
               />
             </div>
             
-            <Button onClick={handleUpdate}>Update Profile</Button>
+            <Button onClick={handleUpdate} className="w-full">Update Profile</Button>
           </div>
 
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Your Virtual TAs</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {virtualTAs.map((ta) => (
                 <TACard key={ta.id} {...ta} />
               ))}
@@ -183,7 +184,7 @@ const Profile = () => {
 
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Your GPTs</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {gpts.map((gpt) => (
                 <GPTCard key={gpt.id} {...gpt} />
               ))}
