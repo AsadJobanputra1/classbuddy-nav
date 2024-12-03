@@ -65,5 +65,15 @@ export const gptsApi = {
       .eq("id", id);
 
     if (error) throw error;
+  },
+
+  getFiles: async (gptId: string) => {
+    const { data, error } = await supabase
+      .from("gpt_files")
+      .select("*")
+      .eq("gpt_id", gptId);
+
+    if (error) throw error;
+    return data;
   }
 };

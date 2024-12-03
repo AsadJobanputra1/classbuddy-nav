@@ -58,12 +58,7 @@ const AddGPTWizard = () => {
 
   const fetchFiles = async () => {
     try {
-      const { data, error } = await supabase
-        .from("gpt_files")
-        .select("*")
-        .eq("gpt_id", editId);
-
-      if (error) throw error;
+      const data = await gptsApi.getFiles(editId);
       setFiles(data || []);
     } catch (error) {
       toast({
