@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import GPTs from "./pages/GPTs";
 import VirtualTAs from "./pages/VirtualTAs";
 import Chat from "./pages/Chat";
+import Settings from "./pages/Settings";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -31,6 +32,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/gpts" element={<GPTs />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </Router>
     </QueryClientProvider>
