@@ -1,118 +1,34 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useToast } from "./ui/use-toast";
-import { virtualTAsApi } from "@/apis/virtualTAs";
+import { useAddTAForm } from "@/hooks/useAddTAForm";
 import BasicInfoStep from "./wizard-steps/BasicInfoStep";
 import WelcomeStep from "./wizard-steps/WelcomeStep";
 import PromptStep from "./wizard-steps/PromptStep";
 import DatasourceStep from "./wizard-steps/DatasourceStep";
 import TopNav from "./TopNav";
 import Sidebar from "./Sidebar";
+import { ProgressIndicator } from "./wizard/ProgressIndicator";
 
 const AddTAWizard = () => {
   const [step, setStep] = useState(1);
-  const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
   const editId = new URLSearchParams(location.search).get('edit');
   
-  const [formData, setFormData] = useState({
-    course: "",
-    name: "",
-    instructor_name: "",
-    instructor_email: "",
-    ta_email: "",
-    welcome_message: "",
-    prompt_questions: [""],
-    default_prompt: "",
-    ai_guardrails: "",
-    teaching_style: "by_the_book",
-    no_answer_response: "",
-    canvas_enabled: false,
-    canvas_api_key: "",
-    canvas_course_url: "",
-    panopto_enabled: false,
-    panopto_api_key: "",
-    panopto_course_url: "",
-    captioning_enabled: false,
-  });
+  const {
+    formData,
+    handleInputChange,
+    handlePromptQuestionChange,
+    addPromptQuestion,
+    handleSubmit,
+    fetchTAData,
+  } = useAddTAForm(editId);
 
   useEffect(() => {
     if (editId) {
       fetchTAData();
     }
   }, [editId]);
-
-  const fetchTAData = async () => {
-    try {
-      const data = await virtualTAsApi.getById(editId);
-      if (data) {
-        setFormData({
-          ...data,
-          prompt_questions: data.prompt_questions || [""],
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch TA data",
-        variant: "destructive",
-      });
-      navigate("/");
-    }
-  };
-
-  const handleInputChange = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handlePromptQuestionChange = (index: number, value: string) => {
-    const newQuestions = [...formData.prompt_questions];
-    newQuestions[index] = value;
-    setFormData((prev) => ({
-      ...prev,
-      prompt_questions: newQuestions,
-    }));
-  };
-
-  const addPromptQuestion = () => {
-    setFormData((prev) => ({
-      ...prev,
-      prompt_questions: [...prev.prompt_questions, ""],
-    }));
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      const submissionData = {
-        ...formData,
-        last_modified_by: user?.id,
-        last_modified: new Date().toISOString()
-      };
-
-      if (editId) {
-        await virtualTAsApi.update(editId, submissionData);
-      } else {
-        await virtualTAsApi.create(submissionData);
-      }
-      
-      toast({
-        title: "Success",
-        description: `Virtual TA has been ${editId ? 'updated' : 'created'} successfully`,
-      });
-      
-      navigate("/");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: `Failed to ${editId ? 'update' : 'create'} Virtual TA`,
-        variant: "destructive",
-      });
-    }
-  };
 
   const renderStep = () => {
     switch (step) {
@@ -161,16 +77,7 @@ const AddTAWizard = () => {
             <h2 className="text-2xl font-bold mb-2">
               {editId ? 'Edit' : 'Add New'} Virtual TA
             </h2>
-            <div className="flex gap-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className={`w-1/4 h-2 rounded ${
-                    i <= step ? "bg-primary" : "bg-gray-200"
-                  }`}
-                />
-              ))}
-            </div>
+            <ProgressIndicator currentStep={step} totalSteps={4} />
           </div>
 
           <form
