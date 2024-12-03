@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import GPTs from "./pages/GPTs";
 import VirtualTAs from "./pages/VirtualTAs";
+import Chat from "./pages/Chat";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -29,6 +30,7 @@ function App() {
           <Route path="/add-gpt" element={<AddGPTWizard />} /> {/* Keep both routes for backward compatibility */}
           <Route path="/profile" element={<Profile />} />
           <Route path="/gpts" element={<GPTs />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </Router>
     </QueryClientProvider>
