@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Bot, MessageSquare, Settings, Database } from "lucide-react";
+import { LayoutDashboard, Users, Bot, MessageSquare, Settings } from "lucide-react";
 
 const Sidebar = () => {
   const location = useLocation();
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
     { icon: Bot, label: "Virtual TAs", path: "/" },
-    { icon: Database, label: "GPTs", path: "/gpts" },
+    { icon: Bot, label: "GPTs", path: "/gpts" },
     { icon: MessageSquare, label: "Chat", path: "/chat" },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];
