@@ -25,7 +25,8 @@ function App() {
           <Route path="/" element={<VirtualTAs />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-ta" element={<AddTAWizard />} />
-          <Route path="/add-gpt" element={<AddGPTWizard />} />
+          <Route path="/create-gpt" element={<AddGPTWizard />} />
+          <Route path="/add-gpt" element={<AddGPTWizard />} /> {/* Keep both routes for backward compatibility */}
           <Route path="/profile" element={<Profile />} />
           <Route path="/gpts" element={<GPTs />} />
         </Routes>
