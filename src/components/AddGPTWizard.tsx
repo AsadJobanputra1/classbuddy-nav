@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
-import { supabase } from "@/lib/supabase";
 import GPTBasicInfoStep from "@/components/wizard-steps/GPTBasicInfoStep";
 import GPTWelcomeStep from "@/components/wizard-steps/GPTWelcomeStep";
 import GPTPromptStep from "@/components/wizard-steps/GPTPromptStep";
 import GPTKnowledgebaseStep from "@/components/wizard-steps/GPTKnowledgebaseStep";
 import Sidebar from "./Sidebar";
 import TopNav from "./TopNav";
+import { gptsApi } from "@/apis/gpts";
 
 const AddGPTWizard = () => {
   const [step, setStep] = useState(1);
@@ -39,13 +39,7 @@ const AddGPTWizard = () => {
 
   const fetchGPTData = async () => {
     try {
-      const { data, error } = await supabase
-        .from("gpts")
-        .select("*")
-        .eq("id", editId)
-        .single();
-
-      if (error) throw error;
+      const data = await gptsApi.getById(editId);
       if (data) {
         setFormData({
           ...data,
@@ -102,14 +96,11 @@ const AddGPTWizard = () => {
 
   const handleSubmit = async () => {
     try {
-      const { error } = editId
-        ? await supabase
-            .from("gpts")
-            .update(formData)
-            .eq("id", editId)
-        : await supabase.from("gpts").insert([formData]);
-      
-      if (error) throw error;
+      if (editId) {
+        await gptsApi.update(editId, formData);
+      } else {
+        await gptsApi.create(formData);
+      }
       
       toast({
         title: "Success",

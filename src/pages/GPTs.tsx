@@ -8,6 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import TopNav from "@/components/TopNav";
 import GPTCard from "@/components/GPTCard";
 import GPTCategoryList from "@/components/GPTCategoryList";
+import { gptsApi } from "@/apis/gpts";
 
 const GPTs = () => {
   const [categories, setCategories] = useState([]);
@@ -41,15 +42,7 @@ const GPTs = () => {
 
   const fetchGPTs = async () => {
     try {
-      let query = supabase.from("gpts").select("*");
-      
-      if (selectedCategory) {
-        query = query.eq("category_id", selectedCategory);
-      }
-
-      const { data, error } = await query.order("created_at", { ascending: false });
-
-      if (error) throw error;
+      const data = await gptsApi.getAll(selectedCategory);
       setGPTs(data || []);
     } catch (error) {
       toast({
@@ -66,18 +59,11 @@ const GPTs = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("gpts")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-
+      await gptsApi.delete(id);
       toast({
         title: "Success",
         description: "GPT deleted successfully",
       });
-      
       fetchGPTs();
     } catch (error) {
       toast({
@@ -90,18 +76,11 @@ const GPTs = () => {
 
   const handleToggleFeature = async (id: string, featured: boolean) => {
     try {
-      const { error } = await supabase
-        .from("gpts")
-        .update({ is_featured: featured })
-        .eq("id", id);
-
-      if (error) throw error;
-
+      await gptsApi.toggleFeature(id, featured);
       toast({
         title: "Success",
         description: `GPT ${featured ? "featured" : "unfeatured"} successfully`,
       });
-      
       fetchGPTs();
     } catch (error) {
       toast({
