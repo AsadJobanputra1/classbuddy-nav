@@ -8,8 +8,8 @@ import TATable from "../components/TATable";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
+import { virtualTAsApi } from "@/apis/virtualTAs";
 
 const VirtualTAs = () => {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
@@ -18,31 +18,16 @@ const VirtualTAs = () => {
 
   const { data: tas = [], refetch } = useQuery({
     queryKey: ['virtual-tas'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("virtual_tas")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data || [];
-    },
+    queryFn: virtualTAsApi.getAll,
   });
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("virtual_tas")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-
+      await virtualTAsApi.delete(id);
       toast({
         title: "Success",
         description: "Virtual TA deleted successfully",
       });
-      
       refetch();
     } catch (error) {
       toast({

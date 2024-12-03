@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
-import { supabase } from "@/lib/supabase";
+import { virtualTAsApi } from "@/apis/virtualTAs";
 import BasicInfoStep from "./wizard-steps/BasicInfoStep";
 import WelcomeStep from "./wizard-steps/WelcomeStep";
 import PromptStep from "./wizard-steps/PromptStep";
@@ -46,13 +46,7 @@ const AddTAWizard = () => {
 
   const fetchTAData = async () => {
     try {
-      const { data, error } = await supabase
-        .from("virtual_tas")
-        .select("*")
-        .eq("id", editId)
-        .single();
-
-      if (error) throw error;
+      const data = await virtualTAsApi.getById(editId);
       if (data) {
         setFormData({
           ...data,
@@ -99,14 +93,11 @@ const AddTAWizard = () => {
         last_modified: new Date().toISOString()
       };
 
-      const { error } = editId
-        ? await supabase
-            .from("virtual_tas")
-            .update(submissionData)
-            .eq("id", editId)
-        : await supabase.from("virtual_tas").insert([submissionData]);
-      
-      if (error) throw error;
+      if (editId) {
+        await virtualTAsApi.update(editId, submissionData);
+      } else {
+        await virtualTAsApi.create(submissionData);
+      }
       
       toast({
         title: "Success",
