@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useAddTAForm } from "@/hooks/useAddTAForm";
 import BasicInfoStep from "./wizard-steps/BasicInfoStep";
@@ -12,6 +12,7 @@ import { ProgressIndicator } from "./wizard/ProgressIndicator";
 
 const AddTAWizard = () => {
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
   const location = useLocation();
   const editId = new URLSearchParams(location.search).get('edit');
   
