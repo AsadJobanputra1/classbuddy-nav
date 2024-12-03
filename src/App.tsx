@@ -22,6 +22,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-ta" element={<AddTAWizard />} />
           <Route path="/add-gpt" element={<AddGPTWizard />} />
           <Route path="/profile" element={<Profile />} />
