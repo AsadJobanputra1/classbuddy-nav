@@ -36,71 +36,85 @@ const Profile = () => {
   }, []);
 
   const fetchProfile = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate("/login");
-      return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch profile",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data) {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
     }
-
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch profile",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setProfile(data);
   };
 
   const fetchUserContent = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    const [tasResponse, gptsResponse] = await Promise.all([
-      supabase
-        .from("virtual_tas")
-        .select("*")
-        .eq("last_modified_by", user.id),
-      supabase
-        .from("gpts")
-        .select("*")
-        .eq("last_modified_by", user.id),
-    ]);
+      const [tasResponse, gptsResponse] = await Promise.all([
+        supabase
+          .from("virtual_tas")
+          .select("*")
+          .eq("last_modified_by", user.id),
+        supabase
+          .from("gpts")
+          .select("*")
+          .eq("last_modified_by", user.id),
+      ]);
 
-    if (tasResponse.data) setVirtualTAs(tasResponse.data);
-    if (gptsResponse.data) setGPTs(gptsResponse.data);
+      if (tasResponse.data) setVirtualTAs(tasResponse.data);
+      if (gptsResponse.data) setGPTs(gptsResponse.data);
+    } catch (error) {
+      console.error("Error fetching user content:", error);
+    }
   };
 
   const handleUpdate = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    const { error } = await supabase
-      .from("profiles")
-      .update(profile)
-      .eq("id", user.id);
+      const { error } = await supabase
+        .from("profiles")
+        .update(profile)
+        .eq("id", user.id);
 
-    if (error) {
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to update profile",
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
-        title: "Error",
-        description: "Failed to update profile",
-        variant: "destructive",
+        title: "Success",
+        description: "Profile updated successfully",
       });
-      return;
+    } catch (error) {
+      console.error("Error updating profile:", error);
     }
-
-    toast({
-      title: "Success",
-      description: "Profile updated successfully",
-    });
   };
 
   return (

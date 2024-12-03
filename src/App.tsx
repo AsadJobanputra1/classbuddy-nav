@@ -27,7 +27,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-ta" element={<AddTAWizard />} />
           <Route path="/create-gpt" element={<AddGPTWizard />} />
-          <Route path="/add-gpt" element={<AddGPTWizard />} /> {/* Keep both routes for backward compatibility */}
+          <Route path="/add-gpt" element={<AddGPTWizard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/gpts" element={<GPTs />} />
           <Route path="/chat" element={<Chat />} />
